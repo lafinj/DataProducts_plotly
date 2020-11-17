@@ -2,7 +2,7 @@
 title: "Plotly demonstration"
 author: "John Lafin"
 date: "11/17/2020"
-output: html_document
+output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
@@ -63,3 +63,5 @@ fig
 ```
 
 The data indicate that grass plants from Quebec have more cold tolerance than those from Mississippi, reflected by a smaller difference between chilled and unchilled treatments.
+
+## Thanks!
