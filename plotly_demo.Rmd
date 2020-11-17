@@ -1,0 +1,65 @@
+---
+title: "Plotly demonstration"
+author: "John Lafin"
+date: "11/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE)
+library(tidyverse)
+library(plotly)
+```
+
+## Introduction
+
+This project draws upon the CO2 dataset. This dataset originates from an experiment on the cold tolerance of the grass species *Echinochloa crus-galli*. The plants are separated by origin (Quebec or Mississippi), and by treatment (chilled 24 h prior to measurement, or unchilled). Measurements were taken at 7 different ambient CO2 levels.
+
+## Results
+
+```{r}
+data(CO2)
+m <- CO2 %>% 
+  group_by(Type, Treatment, conc) %>%
+  summarize(uptake = mean(uptake))
+fig <- plot_ly(data = filter(m, Treatment == 'nonchilled' & Type == 'Quebec'), 
+               x = ~conc, 
+               y = ~uptake,
+               color = ~Type, 
+               text = 'Quebec, nonchilled',
+               type = 'scatter',
+               mode = 'lines')
+fig <- fig %>% add_trace(data = filter(m, Treatment == 'nonchilled' & Type == 'Mississippi'),
+                         x = ~conc,
+                         y = ~uptake,
+                         color = ~Type,
+                         text = 'Mississippi, nonchilled',
+                         type = 'scatter',
+                         mode = 'lines')
+fig <- fig %>% add_trace(data = filter(m, Treatment == 'chilled' & Type == 'Quebec'),
+                         x = ~conc,
+                         y = ~uptake,
+                         color = ~Type,
+                         text = 'Quebec, chilled',
+                         type = 'scatter',
+                         mode = 'lines',
+                         line = list(dash = 'dash'))
+fig <- fig %>% add_trace(data = filter(m, Treatment == 'chilled' & Type == 'Mississippi'),
+                         x = ~conc,
+                         y = ~uptake,
+                         color = ~Type,
+                         text = 'Mississippi, chilled',
+                         type = 'scatter',
+                         mode = 'lines',
+                         line = list(dash = 'dash'))
+fig <- fig %>% layout(title = 'Carbon Dioxide Uptake in Grass Plants',
+                      xaxis = list(title = 'Ambient CO2 (mL/L)'),
+                      yaxis = list(title = 'CO2 uptake rate (µmol/m^2 sec)'),
+                      showlegend = FALSE)
+
+fig
+```
+
+The data indicate that grass plants from Quebec have more cold tolerance than those from Mississippi, reflected by a smaller difference between chilled and unchilled treatments.
